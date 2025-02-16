@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeaqPay Branding - Design System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/logo.svg" alt="PeaqPay Logo">
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="docs.html">Docs</a>
+                <a href="branding.html" class="active">Branding</a>
+                <a href="https://github.com/peaqnetwork" target="_blank">GitHub</a>
+                <a href="https://peaq.network" target="_blank">Peaq Network</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="branding-container">
+        <section class="brand-hero">
+            <h1>Design System</h1>
+            <p class="subtitle">Our brand identity reflects our commitment to innovation, security, and user experience in the Economy of Things.</p>
+        </section>
+
+        <section class="brand-colors">
+            <h2>Color Palette</h2>
+            <div class="color-grid">
+                <div class="color-card primary">
+                    <div class="color-preview" style="background: var(--primary)"></div>
+                    <div class="color-info">
+                        <h3>Primary Blue</h3>
+                        <code>#3B82F6</code>
+                    </div>
+                </div>
+                <div class="color-card secondary">
+                    <div class="color-preview" style="background: var(--secondary)"></div>
+                    <div class="color-info">
+                        <h3>Secondary Purple</h3>
+                        <code>#8B5CF6</code>
+                    </div>
+                </div>
+                <div class="color-card accent">
+                    <div class="color-preview" style="background: var(--accent)"></div>
+                    <div class="color-info">
+                        <h3>Accent Green</h3>
+                        <code>#10B981</code>
+                    </div>
+                </div>
+                <div class="color-card dark">
+                    <div class="color-preview" style="background: var(--dark)"></div>
+                    <div class="color-info">
+                        <h3>Dark</h3>
+                        <code>#111827</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="typography">
+            <h2>Typography</h2>
+            <div class="type-specimens">
+                <div class="type-card">
+                    <h1>Heading 1</h1>
+                    <p class="type-details">Inter Bold / 48px / 1.2</p>
+                </div>
+                <div class="type-card">
+                    <h2>Heading 2</h2>
+                    <p class="type-details">Inter SemiBold / 36px / 1.3</p>
+                </div>
+                <div class="type-card">
+                    <h3>Heading 3</h3>
+                    <p class="type-details">Inter Medium / 24px / 1.4</p>
+                </div>
+                <div class="type-card">
+                    <p class="body-text">Body Text</p>
+                    <p class="type-details">Inter Regular / 16px / 1.5</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="logo-usage">
+            <h2>Logo Usage</h2>
+            <div class="logo-grid">
+                <div class="logo-card light">
+                    <img src="images/logo.svg" alt="PeaqPay Logo Light">
+                    <p>Light Background</p>
+                </div>
+                <div class="logo-card dark">
+                    <img src="images/logo-white.svg" alt="PeaqPay Logo Dark">
+                    <p>Dark Background</p>
+                </div>
+                <div class="logo-card icon">
+                    <img src="images/logo-icon.svg" alt="PeaqPay Icon">
+                    <p>Icon Only</p>
+                </div>
+            </div>
+            <div class="logo-guidelines">
+                <h3>Guidelines</h3>
+                <ul>
+                    <li>Maintain clear space around the logo equal to the height of the "P" in PeaqPay</li>
+                    <li>Never stretch, rotate, or distort the logo</li>
+                    <li>Use only approved color variations</li>
+                    <li>Minimum size: 100px width for digital, 1 inch for print</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="components">
+            <h2>UI Components</h2>
+            <div class="component-grid">
+                <div class="component-card">
+                    <h3>Buttons</h3>
+                    <div class="button-showcase">
+                        <button class="button primary">Primary Button</button>
+                        <button class="button secondary">Secondary Button</button>
+                        <button class="button outline">Outline Button</button>
+                    </div>
+                </div>
+                <div class="component-card">
+                    <h3>Input Fields</h3>
+                    <div class="input-showcase">
+                        <input type="text" placeholder="Standard Input" class="input-field">
+                        <input type="text" placeholder="Disabled Input" class="input-field" disabled>
+                    </div>
+                </div>
+                <div class="component-card">
+                    <h3>Cards</h3>
+                    <div class="card-showcase">
+                        <div class="showcase-card">
+                            <h4>Card Title</h4>
+                            <p>Card content with consistent padding and rounded corners.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

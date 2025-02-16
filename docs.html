@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeaqPay Documentation - Build with Decentralized Payments</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/logo.svg" alt="PeaqPay Logo">
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="docs.html" class="active">Docs</a>
+                <a href="branding.html">Branding</a>
+                <a href="https://github.com/peaqnetwork" target="_blank">GitHub</a>
+                <a href="https://peaq.network" target="_blank">Peaq Network</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="docs-container">
+        <aside class="docs-sidebar">
+            <nav>
+                <h3>Getting Started</h3>
+                <ul>
+                    <li><a href="#installation">Installation</a></li>
+                    <li><a href="#quick-start">Quick Start</a></li>
+                    <li><a href="#configuration">Configuration</a></li>
+                </ul>
+                <h3>Core Features</h3>
+                <ul>
+                    <li><a href="#payment-requests">Payment Requests</a></li>
+                    <li><a href="#qr-codes">QR Codes</a></li>
+                    <li><a href="#transaction-tracking">Transaction Tracking</a></li>
+                    <li><a href="#webhooks">Webhooks</a></li>
+                    <li><a href="#subscriptions">Subscriptions</a></li>
+                </ul>
+                <h3>Guides</h3>
+                <ul>
+                    <li><a href="#merchant-integration">Merchant Integration</a></li>
+                    <li><a href="#subscription-setup">Subscription Setup</a></li>
+                    <li><a href="#webhook-setup">Webhook Setup</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="docs-content">
+            <section id="installation">
+                <h2>Installation</h2>
+                <p>Install PeaqPay SDK using npm:</p>
+                <pre><code class="language-bash">npm install peaqpay</code></pre>
+            </section>
+
+            <section id="quick-start">
+                <h2>Quick Start</h2>
+                <p>Create your first payment request in just a few lines of code:</p>
+                <pre><code class="language-typescript">
+import { PeaqPay, PEAQ_NETWORKS } from 'peaqpay';
+
+// Initialize SDK
+const peaqPay = new PeaqPay(PEAQ_NETWORKS.MAINNET);
+await peaqPay.connect();
+
+// Create a payment request
+const request = {
+    recipient: 'YOUR_WALLET_ADDRESS',
+    amount: '10.0',
+    label: 'Coffee Shop',
+    message: 'Payment for coffee'
+};
+
+// Generate payment URL and QR code
+const paymentUrl = await peaqPay.createPaymentRequest(request);
+const qrCode = await peaqPay.createQRCode(paymentUrl);
+                </code></pre>
+            </section>
+
+            <section id="configuration">
+                <h2>Configuration</h2>
+                <p>Configure PeaqPay with your network settings and optional wallet seed:</p>
+                <pre><code class="language-typescript">
+import { PeaqPay, PEAQ_NETWORKS } from 'peaqpay';
+
+// Read-only mode (no wallet required)
+const peaqPay = new PeaqPay(PEAQ_NETWORKS.MAINNET);
+
+// Full mode with wallet
+const peaqPayWithWallet = new PeaqPay(
+    PEAQ_NETWORKS.MAINNET,
+    'YOUR_WALLET_SEED' // Required for sending transactions
+);
+
+// Available networks
+const networks = {
+    MAINNET: 'wss://wss.peaq.network',
+    TESTNET: 'wss://wss.test.peaq.network'
+};
+                </code></pre>
+            </section>
+
+            <section id="payment-requests">
+                <h2>Payment Requests</h2>
+                <p>Create payment requests to receive funds:</p>
+                <pre><code class="language-typescript">
+// Create a payment request
+const request = {
+    recipient: 'YOUR_WALLET_ADDRESS',
+    amount: '10.0',
+    label: 'Coffee Shop', // Optional
+    message: 'Payment for coffee', // Optional
+    reference: 'order-123' // Optional, for tracking
+};
+
+const paymentUrl = await peaqPay.createPaymentRequest(request);
+console.log('Payment URL:', paymentUrl);
+// Output: peaqpay:?recipient=...&amount=10.0&label=Coffee%20Shop...
+                </code></pre>
+                <p>The payment URL can be shared with customers or converted to a QR code.</p>
+            </section>
+
+            <section id="qr-codes">
+                <h2>QR Codes</h2>
+                <p>Generate QR codes from payment requests for easy mobile payments:</p>
+                <pre><code class="language-typescript">
+// Generate QR code from payment URL
+const qrCode = await peaqPay.createQRCode(paymentUrl);
+console.log('QR Code (data URL):', qrCode);
+
+// Use in HTML
+const img = document.createElement('img');
+img.src = qrCode;
+document.body.appendChild(img);
+                </code></pre>
+                <p>The QR code is returned as a data URL that can be used directly in an <code>&lt;img&gt;</code> tag.</p>
+            </section>
+
+            <section id="transaction-tracking">
+                <h2>Transaction Tracking</h2>
+                <p>Track the status of payments and transactions:</p>
+                <pre><code class="language-typescript">
+// After sending a transaction
+const tx = await peaqPay.transfer(recipient, amount);
+console.log('Transaction signature:', tx.signature);
+
+// Check transaction status
+const status = peaqPay.getTransactionStatus(tx.signature);
+if (status.confirmed) {
+    console.log('Transaction confirmed in block:', status.blockNumber);
+    console.log('Timestamp:', new Date(status.timestamp));
+} else if (status.error) {
+    console.error('Transaction failed:', status.error);
+}
+
+// Transaction status includes:
+interface TransactionStatus {
+    signature: string;
+    confirmed: boolean;
+    blockNumber?: number;
+    timestamp?: number;
+    error?: string;
+}
+                </code></pre>
+            </section>
+
+            <section id="webhooks">
+                <h2>Webhooks</h2>
+                <p>Get notified about payment events in real-time:</p>
+                <pre><code class="language-typescript">
+// Register a webhook
+peaqPay.registerWebhook('my-store', {
+    url: 'https://your-store.com/webhook',
+    secret: 'your-webhook-secret',
+    events: [
+        'payment.created',
+        'payment.confirmed',
+        'payment.failed',
+        'subscription.payment'
+    ]
+});
+
+// Webhook payload format
+interface WebhookPayload {
+    event: string;
+    timestamp: number;
+    data: {
+        recipient: string;
+        amount: string;
+        reference?: string;
+        signature?: string;
+        blockNumber?: number;
+    };
+}
+
+// Verify webhook signature (on your server)
+const isValid = verifyWebhookSignature(
+    payload,
+    request.headers['x-peaqpay-signature'],
+    'your-webhook-secret'
+);
+                </code></pre>
+            </section>
+
+            <section id="subscriptions">
+                <h2>Subscriptions</h2>
+                <p>Set up and manage recurring payments:</p>
+                <pre><code class="language-typescript">
+// Create a subscription plan
+const plan = peaqPay.createSubscriptionPlan({
+    name: 'Premium Plan',
+    amount: '50.0',
+    interval: 'monthly', // 'daily', 'weekly', 'monthly', 'yearly'
+    maxPayments: 12 // Optional: limit number of payments
+});
+
+// Subscribe a customer
+const subscription = await peaqPay.createSubscription(
+    plan.id,
+    'CUSTOMER_WALLET_ADDRESS'
+);
+
+// Get subscription details
+const details = peaqPay.getSubscription(subscription.id);
+console.log('Status:', details.status);
+console.log('Payments completed:', details.paymentsCompleted);
+console.log('Next payment:', details.nextPaymentDate);
+
+// Cancel subscription
+peaqPay.cancelSubscription(subscription.id);
+                </code></pre>
+            </section>
+
+            <section id="merchant-integration">
+                <h2>Merchant Integration Guide</h2>
+                <h3>Step 1: Set Up Your Account</h3>
+                <p>Before accepting payments, you'll need:</p>
+                <ul>
+                    <li>A Peaq Network wallet</li>
+                    <li>Some PEAQ tokens for gas fees</li>
+                    <li>PeaqPay SDK installed in your application</li>
+                </ul>
+
+                <h3>Step 2: Configure Your Environment</h3>
+                <pre><code class="language-typescript">
+// Initialize with your wallet
+const peaqPay = new PeaqPay(PEAQ_NETWORKS.MAINNET, 'YOUR_WALLET_SEED');
+await peaqPay.connect();
+
+// Set up webhook for payment notifications
+peaqPay.registerWebhook('my-store', {
+    url: 'https://your-store.com/webhook',
+    secret: 'your-webhook-secret',
+    events: ['payment.created', 'payment.confirmed']
+});
+                </code></pre>
+
+                <h3>Step 3: Create Payment Buttons</h3>
+                <p>Add payment buttons to your website:</p>
+                <pre><code class="language-html">
+&lt;button onclick="createPayment()"&gt;Pay with PeaqPay&lt;/button&gt;
+
+&lt;script&gt;
+async function createPayment() {
+    const request = {
+        recipient: 'YOUR_WALLET_ADDRESS',
+        amount: '10.0',
+        label: 'Your Store',
+        message: 'Order #123'
+    };
+    
+    const paymentUrl = await peaqPay.createPaymentRequest(request);
+    window.location.href = paymentUrl;
+}
+&lt;/script&gt;
+                </code></pre>
+            </section>
+
+            <section id="subscription-setup">
+                <h2>Subscription Setup Guide</h2>
+                <p>Set up recurring payments for your service:</p>
+                <pre><code class="language-typescript">
+// Create a subscription plan
+const plan = peaqPay.createSubscriptionPlan({
+    name: 'Premium Plan',
+    amount: '50.0',
+    interval: 'monthly'
+});
+
+// Subscribe a customer
+const subscription = await peaqPay.createSubscription(
+    plan.id,
+    'CUSTOMER_WALLET_ADDRESS'
+);
+
+// Track subscription status
+peaqPay.on('subscription.payment', (event) => {
+    console.log(`Received payment for subscription ${event.subscriptionId}`);
+});
+                </code></pre>
+            </section>
+
+            <section id="webhook-setup">
+                <h2>Webhook Setup Guide</h2>
+                <p>Follow these steps to set up and manage webhooks:</p>
+                <h3>Step 1: Register Your Webhook</h3>
+                <pre><code class="language-typescript">
+// Register webhook with specific events
+peaqPay.registerWebhook('my-webhook', {
+    url: 'https://your-server.com/webhook',
+    secret: generateSecureSecret(), // Use a secure random string
+    events: ['payment.created', 'payment.confirmed']
+});
+                </code></pre>
+
+                <h3>Step 2: Set Up Your Server</h3>
+                <pre><code class="language-typescript">
+// Example Express.js webhook handler
+app.post('/webhook', express.json(), (req, res) => {
+    const signature = req.headers['x-peaqpay-signature'];
+    const event = req.headers['x-peaqpay-event'];
+    
+    // Verify webhook signature
+    if (!verifyWebhookSignature(req.body, signature, WEBHOOK_SECRET)) {
+        return res.status(401).send('Invalid signature');
+    }
+    
+    // Handle different events
+    switch (event) {
+        case 'payment.created':
+            // Process new payment
+            break;
+        case 'payment.confirmed':
+            // Fulfill order
+            break;
+    }
+    
+    res.status(200).send('OK');
+});
+                </code></pre>
+
+                <h3>Step 3: Manage Webhooks</h3>
+                <pre><code class="language-typescript">
+// List all registered webhooks
+const webhooks = peaqPay.getRegisteredWebhooks();
+
+// Remove a webhook
+peaqPay.removeWebhook('my-webhook');
+                </code></pre>
+                
+                <p>Security best practices:</p>
+                <ul>
+                    <li>Always verify webhook signatures</li>
+                    <li>Use HTTPS endpoints</li>
+                    <li>Keep webhook secrets secure</li>
+                    <li>Implement retry logic for failed deliveries</li>
+                </ul>
+            </section>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-bash.min.js"></script>
+</body>
+</html>
